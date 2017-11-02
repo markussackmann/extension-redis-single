@@ -1,17 +1,10 @@
 <cfcomponent extends="Cache">
 	<cfset fields = array(
-		field(displayName = "Master name",
-			name = "masterName",
-			defaultValue = "",
+		field(displayName = "Server Host",
+			name = "hosts",
+			defaultValue = "localhost:6379",
 			required = true,
-			description = "Sentinel master name",
-			type = "text"
-			),
-		field(displayName = "Sentinels",
-			name = "sentinels",
-			defaultValue = "localhost:26379",
-			required = true,
-			description = "Sentinels",
+			description = "Redis host and port",
 			type = "textarea"
 		),
 		field(

@@ -8,17 +8,17 @@ import lucee.runtime.type.Struct;
 import lucee.runtime.util.Cast;
 import lucee.runtime.exp.PageException;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisSentinelPool;
+import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
-public class RedisSentinelConnection {
+public class RedisConnection {
 
-	private static final Hashtable<String, JedisSentinelPool> instance = new Hashtable<String, JedisSentinelPool>();
+	private static final Hashtable<String, JedisPool> instance = new Hashtable<String, JedisPool>();
 	private static final Hashtable<String, String> namespace = new Hashtable<String, String>();
 
-	private RedisSentinelConnection() {}
+	private RedisConnection() {}
 
-	public static JedisSentinelPool init(String cacheName, Struct arguments){
+	public static JedisPool init(String cacheName, Struct arguments){
 
 		CFMLEngine engine = CFMLEngineFactory.getInstance();
 		Cast caster = engine.getCastUtil();
@@ -30,14 +30,16 @@ public class RedisSentinelConnection {
 		try{
 			namespace.put(cacheName, caster.toString(arguments.get("namespace")));
 
-			String masterName = caster.toString(arguments.get("masterName"));
-			Set<String> sentinels = new HashSet<String>(Arrays.asList(caster.toString(arguments.get("sentinels")).split("\\r?\\n")));
+			String hosts = caster.toString(arguments.get("hosts"));
+			String host = hosts.split(":")[0];
+
+			Integer port = caster.toInteger(hosts.split(":")[1]);
 
 			JedisPoolConfig config = new JedisPoolConfig();
 			config.setTestOnBorrow(true);
 			// config.setTestOnReturn(true);
 
-			instance.put(cacheName, new JedisSentinelPool(masterName, sentinels, config));
+			instance.put(cacheName, new JedisPool(config, host, port));
 
 		} catch (PageException e) {
 			e.printStackTrace();
@@ -46,7 +48,7 @@ public class RedisSentinelConnection {
 		return instance.get(cacheName);
 	}
 
-	public static JedisSentinelPool getInstance(String cacheName){
+	public static JedisPool getInstance(String cacheName){
 		return instance.get(cacheName);
 	}
 

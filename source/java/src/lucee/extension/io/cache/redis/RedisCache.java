@@ -12,7 +12,7 @@ import lucee.runtime.exp.PageException;
 import lucee.runtime.type.Struct;
 import lucee.runtime.util.Cast;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisSentinelPool;
+import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-public class RedisSentinelCache implements Cache {
+public class RedisCache implements Cache {
 
 	public Functions func = new Functions();
 	CFMLEngine engine = CFMLEngineFactory.getInstance();
@@ -31,7 +31,7 @@ public class RedisSentinelCache implements Cache {
 
 	public void init(String cacheName, Struct arguments) throws IOException {
 		this.cacheName = cacheName;
-		RedisSentinelConnection.init(cacheName, arguments);
+		RedisConnection.init(cacheName, arguments);
 	}
 
 	public void init(Config config, String[] cacheName, Struct[] arguments) {
@@ -49,7 +49,7 @@ public class RedisSentinelCache implements Cache {
 
 	public CacheEntry getCacheEntry(String key) throws IOException {
 
-		JedisSentinelPool pool = RedisSentinelConnection.getInstance(cacheName);
+		JedisPool pool = RedisConnection.getInstance(cacheName);
 		Jedis conn = pool.getResource();
 		RedisCacheItem item;
 
@@ -102,7 +102,7 @@ public class RedisSentinelCache implements Cache {
 	}
 
 	public void put(String key, Object val, Long idle, Long expire) {
-		JedisSentinelPool pool = RedisSentinelConnection.getInstance(cacheName);
+		JedisPool pool = RedisConnection.getInstance(cacheName);
 		Jedis conn = pool.getResource();
 		try {
 			Integer exp = 0;
@@ -138,7 +138,7 @@ public class RedisSentinelCache implements Cache {
 	}
 
 	public boolean contains(String key) {
-		JedisSentinelPool pool = RedisSentinelConnection.getInstance(cacheName);
+		JedisPool pool = RedisConnection.getInstance(cacheName);
 		Jedis conn = pool.getResource();
 		try {
 			return conn.exists(RedisCacheUtils.formatKey(cacheName, key));
@@ -153,7 +153,7 @@ public class RedisSentinelCache implements Cache {
 	}
 
 	public boolean remove(String key) {
-		JedisSentinelPool pool = RedisSentinelConnection.getInstance(cacheName);
+		JedisPool pool = RedisConnection.getInstance(cacheName);
 		Jedis conn = pool.getResource();
 		try {
 			Long res = conn.del(RedisCacheUtils.formatKey(cacheName, key));
@@ -187,12 +187,12 @@ public class RedisSentinelCache implements Cache {
 	}
 
 	public List keys() {
-		JedisSentinelPool pool = RedisSentinelConnection.getInstance(cacheName);
+		JedisPool pool = RedisConnection.getInstance(cacheName);
 		Jedis conn = pool.getResource();
 		ArrayList res = null;
 
 		try {
-			res = new ArrayList(conn.keys(RedisSentinelConnection.getNamespace(cacheName) + '*'));
+			res = new ArrayList(conn.keys(RedisConnection.getNamespace(cacheName) + '*'));
 		} catch (JedisConnectionException e) {
 			if (null != conn) {
 				pool.returnBrokenResource(conn);
@@ -261,7 +261,7 @@ public class RedisSentinelCache implements Cache {
 	}
 
 	private List entriesList(List keys) {
-		JedisSentinelPool pool = RedisSentinelConnection.getInstance(cacheName);
+		JedisPool pool = RedisConnection.getInstance(cacheName);
 		Jedis conn = pool.getResource();
 		ArrayList<RedisCacheEntry> res = null;
 
