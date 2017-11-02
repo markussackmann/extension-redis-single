@@ -1,11 +1,17 @@
-## Lucee Redis Cache Extension
+## Lucee Redis Single Cache Extension
 
-The redis driver is based on Jedis. While this is a very robust driver and Redis is amaxing this project has to be considered in Beta stage.
-Feel free to fork it and provide your feedbacks.
+Clone of https://github.com/lucee/extension-redis and adapted to redis single.
+
+The redis driver is based on Jedis. While this is a very robust driver and Redis is amaxing this project has to be considered in Beta stage. Feel free to fork it and provide your feedbacks.
 
 ### Installation
 
-Install the extension from the Lucee extension store in Lucee admin. Please note that the extension is installable only in the *server* admin.
+Clone repository.
+cd extension-redis-single
+ant modern
+Upload dist/modern/redisdb-extension.lex in Lucee Admin - Extension - Applications.
+
+Please note that the extension is installable only in the *server* admin.
 This means that is not possible to install it for a single web context.
 
 ### Create and configure the cache
