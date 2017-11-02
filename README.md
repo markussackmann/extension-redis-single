@@ -6,10 +6,10 @@ The redis driver is based on Jedis. While this is a very robust driver and Redis
 
 ### Installation
 
-Clone repository.
-cd extension-redis-single
-ant modern
-Upload dist/modern/redisdb-extension.lex in Lucee Admin - Extension - Applications.
+* Clone repository.
+* cd extension-redis-single
+* ant modern
+* Upload dist/modern/redisdb-extension.lex in Lucee Admin - Extension - Applications.
 
 Please note that the extension is installable only in the *server* admin.
 This means that is not possible to install it for a single web context.
