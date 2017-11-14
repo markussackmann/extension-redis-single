@@ -50,10 +50,11 @@ public class RedisCache implements Cache {
 	public CacheEntry getCacheEntry(String key) throws IOException {
 
 		JedisPool pool = RedisConnection.getInstance(cacheName);
-		Jedis conn = pool.getResource();
+		Jedis conn = null;
 		RedisCacheItem item;
 
 		try {
+			conn = pool.getResource();
 			String k = RedisCacheUtils.formatKey(cacheName, key);
 			List<String> val = conn.hmget(k, "value", "hitCount");
 			if (val.get(0) == null) {
@@ -103,8 +104,9 @@ public class RedisCache implements Cache {
 
 	public void put(String key, Object val, Long idle, Long expire) {
 		JedisPool pool = RedisConnection.getInstance(cacheName);
-		Jedis conn = pool.getResource();
+		Jedis conn = null;
 		try {
+			conn = pool.getResource();
 			Integer exp = 0;
 
 			String k = RedisCacheUtils.formatKey(cacheName, key);
@@ -139,8 +141,9 @@ public class RedisCache implements Cache {
 
 	public boolean contains(String key) {
 		JedisPool pool = RedisConnection.getInstance(cacheName);
-		Jedis conn = pool.getResource();
+		Jedis conn = null;
 		try {
+			conn = pool.getResource();
 			return conn.exists(RedisCacheUtils.formatKey(cacheName, key));
 		} catch (JedisConnectionException e) {
 			if (null != conn) {
@@ -154,8 +157,9 @@ public class RedisCache implements Cache {
 
 	public boolean remove(String key) {
 		JedisPool pool = RedisConnection.getInstance(cacheName);
-		Jedis conn = pool.getResource();
+		Jedis conn = null;
 		try {
+			conn = pool.getResource();
 			Long res = conn.del(RedisCacheUtils.formatKey(cacheName, key));
 			return res == 1;
 		} catch (JedisConnectionException e) {
@@ -188,10 +192,11 @@ public class RedisCache implements Cache {
 
 	public List keys() {
 		JedisPool pool = RedisConnection.getInstance(cacheName);
-		Jedis conn = pool.getResource();
+		Jedis conn = null;
 		ArrayList res = null;
 
 		try {
+			conn = pool.getResource();
 			res = new ArrayList(conn.keys(RedisConnection.getNamespace(cacheName) + '*'));
 		} catch (JedisConnectionException e) {
 			if (null != conn) {
@@ -262,10 +267,11 @@ public class RedisCache implements Cache {
 
 	private List entriesList(List keys) {
 		JedisPool pool = RedisConnection.getInstance(cacheName);
-		Jedis conn = pool.getResource();
+		Jedis conn = null;
 		ArrayList<RedisCacheEntry> res = null;
 
 		try {
+			conn = pool.getResource();
 			res = new ArrayList<RedisCacheEntry>();
 			Iterator<String> it = keys.iterator();
 			while (it.hasNext()) {
