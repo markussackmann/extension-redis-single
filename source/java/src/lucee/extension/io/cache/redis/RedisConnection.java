@@ -35,11 +35,31 @@ public class RedisConnection {
 
 			Integer port = caster.toInteger(hosts.split(":")[1]);
 
-			JedisPoolConfig config = new JedisPoolConfig();
-			config.setTestOnBorrow(true);
-			// config.setTestOnReturn(true);
+			Integer setMaxTotal = caster.toInteger(arguments.get("setMaxTotal"),128);
+			Integer setMaxIdle = caster.toInteger(arguments.get("namespace"),128);
+			Integer setMinIdle = caster.toInteger(arguments.get("namespace"),16);
+			Integer setMinEvictableIdleTimeMillis = caster.toInteger(arguments.get("setMinEvictableIdleTimeMillis"),60000);
+			Integer setTimeBetweenEvictionRunsMillis = caster.toInteger(arguments.get("setTimeBetweenEvictionRunsMillis"),30000);
+			Integer setNumTestsPerEvictionRun = caster.toInteger(arguments.get("setNumTestsPerEvictionRun"),3);
 
-			instance.put(cacheName, new JedisPool(config, host, port));
+			Boolean setTestOnBorrow = caster.toBoolean(arguments.get("setTestOnBorrow"),true);
+			Boolean setTestOnReturn = caster.toBoolean(arguments.get("setTestOnReturn"),true);
+			Boolean setTestWhileIdle = caster.toBoolean(arguments.get("setTestWhileIdle"),true);
+			Boolean setBlockWhenExhausted = caster.toBoolean(arguments.get("setBlockWhenExhausted"),true);
+
+			final JedisPoolConfig poolConfig = new JedisPoolConfig();
+			poolConfig.setMaxTotal(setMaxTotal);
+			poolConfig.setMaxIdle(setMaxIdle);
+			poolConfig.setMinIdle(setMinIdle);
+			poolConfig.setTestOnBorrow(setTestOnBorrow);
+			poolConfig.setTestOnReturn(setTestOnReturn);
+			poolConfig.setTestWhileIdle(setTestWhileIdle);
+			poolConfig.setMinEvictableIdleTimeMillis(setMinEvictableIdleTimeMillis);
+			poolConfig.setTimeBetweenEvictionRunsMillis(setTimeBetweenEvictionRunsMillis);
+			poolConfig.setNumTestsPerEvictionRun(setNumTestsPerEvictionRun);
+			poolConfig.setBlockWhenExhausted(setBlockWhenExhausted);
+
+			instance.put(cacheName, new JedisPool(poolConfig, host, port));
 
 		} catch (PageException e) {
 			e.printStackTrace();
