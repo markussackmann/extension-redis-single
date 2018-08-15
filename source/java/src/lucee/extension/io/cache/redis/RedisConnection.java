@@ -35,17 +35,17 @@ public class RedisConnection {
 
 			Integer port = caster.toInteger(hosts.split(":")[1]);
 
-			Integer setMaxTotal = caster.toInteger(arguments.get("setMaxTotal"),128);
-			Integer setMaxIdle = caster.toInteger(arguments.get("namespace"),128);
-			Integer setMinIdle = caster.toInteger(arguments.get("namespace"),16);
-			Integer setMinEvictableIdleTimeMillis = caster.toInteger(arguments.get("setMinEvictableIdleTimeMillis"),60000);
-			Integer setTimeBetweenEvictionRunsMillis = caster.toInteger(arguments.get("setTimeBetweenEvictionRunsMillis"),30000);
-			Integer setNumTestsPerEvictionRun = caster.toInteger(arguments.get("setNumTestsPerEvictionRun"),3);
+			Integer setMaxTotal = caster.toInteger(arguments.getOrDefault("setMaxTotal",128),128);
+			Integer setMaxIdle = caster.toInteger(arguments.getOrDefault("setMaxIdle",128),128);
+			Integer setMinIdle = caster.toInteger(arguments.getOrDefault("setMinIdle",16),16);
+			Integer setMinEvictableIdleTimeMillis = caster.toInteger(arguments.getOrDefault("setMinEvictableIdleTimeMillis",60000),60000);
+			Integer setTimeBetweenEvictionRunsMillis = caster.toInteger(arguments.getOrDefault("setTimeBetweenEvictionRunsMillis",30000),30000);
+			Integer setNumTestsPerEvictionRun = caster.toInteger(arguments.getOrDefault("setNumTestsPerEvictionRun",3),3);
 
-			Boolean setTestOnBorrow = caster.toBoolean(arguments.get("setTestOnBorrow"),true);
-			Boolean setTestOnReturn = caster.toBoolean(arguments.get("setTestOnReturn"),true);
-			Boolean setTestWhileIdle = caster.toBoolean(arguments.get("setTestWhileIdle"),true);
-			Boolean setBlockWhenExhausted = caster.toBoolean(arguments.get("setBlockWhenExhausted"),true);
+			Boolean setTestOnBorrow = caster.toBoolean(arguments.getOrDefault("setTestOnBorrow",true),true);
+			Boolean setTestOnReturn = caster.toBoolean(arguments.getOrDefault("setTestOnReturn",true),true);
+			Boolean setTestWhileIdle = caster.toBoolean(arguments.getOrDefault("setTestWhileIdle",true),true);
+			Boolean setBlockWhenExhausted = caster.toBoolean(arguments.getOrDefault("setBlockWhenExhausted",true),true);
 
 			final JedisPoolConfig poolConfig = new JedisPoolConfig();
 			poolConfig.setMaxTotal(setMaxTotal);
