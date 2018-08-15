@@ -65,6 +65,7 @@ public class RedisCache implements Cache {
 
 			return new RedisCacheEntry(item);
 		} catch (JedisConnectionException e) {
+			e.printStackTrace();
 			if (null != conn) {
 				pool.returnBrokenResource(conn);
 				conn = null;
@@ -127,6 +128,7 @@ public class RedisCache implements Cache {
 				conn.expire(k, exp);
 			}
 		} catch (JedisConnectionException e) {
+			e.printStackTrace();
 			if (null != conn) {
 				pool.returnBrokenResource(conn);
 				conn = null;
@@ -146,6 +148,7 @@ public class RedisCache implements Cache {
 			conn = pool.getResource();
 			return conn.exists(RedisCacheUtils.formatKey(cacheName, key));
 		} catch (JedisConnectionException e) {
+			e.printStackTrace();
 			if (null != conn) {
 				pool.returnBrokenResource(conn);
 			}
@@ -163,6 +166,7 @@ public class RedisCache implements Cache {
 			Long res = conn.del(RedisCacheUtils.formatKey(cacheName, key));
 			return res == 1;
 		} catch (JedisConnectionException e) {
+			e.printStackTrace();
 			if (null != conn) {
 				pool.returnBrokenResource(conn);
 			}
@@ -199,6 +203,7 @@ public class RedisCache implements Cache {
 			conn = pool.getResource();
 			res = new ArrayList(conn.keys(RedisConnection.getNamespace(cacheName) + '*'));
 		} catch (JedisConnectionException e) {
+			e.printStackTrace();
 			if (null != conn) {
 				pool.returnBrokenResource(conn);
 			}
@@ -280,6 +285,7 @@ public class RedisCache implements Cache {
 			}
 
 		} catch (JedisConnectionException e) {
+			e.printStackTrace();
 			if (null != conn) {
 				pool.returnBrokenResource(conn);
 			}
