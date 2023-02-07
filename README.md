@@ -1,3 +1,4 @@
+# This extension is obsolete since the official lucee extension https://github.com/lucee/extension-redis also supports redis single.
 ## Lucee Redis Single Cache Extension
 
 Clone of https://github.com/lucee/extension-redis and adapted to redis single.
